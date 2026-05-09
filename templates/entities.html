@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>AI Invoice Results</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:Arial;
+        }
+
+        body{
+            background:#f4f7fb;
+            display:flex;
+        }
+
+        .sidebar{
+            width:260px;
+            height:100vh;
+            background:#143d82;
+            color:white;
+            padding:30px 20px;
+            position:fixed;
+            left:0;
+            top:0;
+        }
+
+        .logo{
+            font-size:32px;
+            font-weight:bold;
+            margin-bottom:10px;
+        }
+
+        .subtitle{
+            color:#cbd5e1;
+            margin-bottom:50px;
+        }
+
+        .menu-item{
+            padding:18px 20px;
+            border-radius:14px;
+            margin-bottom:15px;
+            background:rgba(255,255,255,0.08);
+            font-size:18px;
+        }
+
+        .menu-item.active{
+            background:white;
+            color:#143d82;
+            font-weight:bold;
+        }
+
+        .main{
+            margin-left:260px;
+            width:calc(100% - 260px);
+            padding:35px;
+        }
+
+        .topbar{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            margin-bottom:35px;
+        }
+
+        .topbar h1{
+            font-size:42px;
+            color:#111827;
+        }
+
+        .topbar p{
+            color:#6b7280;
+            margin-top:6px;
+        }
+
+        .upload-btn{
+            background:#143d82;
+            color:white;
+            text-decoration:none;
+            padding:15px 24px;
+            border-radius:14px;
+            font-weight:bold;
+        }
+
+        .summary{
+            display:grid;
+            grid-template-columns:repeat(3,1fr);
+            gap:25px;
+            margin-bottom:35px;
+        }
+
+        .card{
+            background:white;
+            padding:30px;
+            border-radius:24px;
+            box-shadow:0px 4px 18px rgba(0,0,0,0.06);
+        }
+
+        .card p{
+            color:#6b7280;
+            margin-bottom:12px;
+        }
+
+        .card h1{
+            font-size:40px;
+        }
+
+        .blue{color:#2563eb;}
+        .green{color:#16a34a;}
+        .orange{color:#ea580c;}
+
+        .content{
+            display:grid;
+            grid-template-columns:1fr 1fr 1.2fr;
+            gap:25px;
+        }
+
+        .panel{
+            background:white;
+            border-radius:24px;
+            padding:28px;
+            box-shadow:0px 4px 18px rgba(0,0,0,0.06);
+        }
+
+        .panel h2{
+            margin-bottom:25px;
+            color:#111827;
+        }
+
+        .preview-img{
+            width:100%;
+            border-radius:18px;
+            border:1px solid #e5e7eb;
+        }
+
+        .ocr-box{
+            background:#f8fafc;
+            border-radius:16px;
+            padding:20px;
+            height:700px;
+            overflow:auto;
+            line-height:1.7;
+            border:1px solid #e5e7eb;
+            white-space:pre-wrap;
+        }
+
+        .table-box{
+            max-height:700px;
+            overflow:auto;
+            border-radius:16px;
+            border:1px solid #e5e7eb;
+        }
+
+        table{
+            width:100%;
+            border-collapse:collapse;
+        }
+
+        th{
+            background:#143d82;
+            color:white;
+            padding:16px;
+            text-align:left;
+            position:sticky;
+            top:0;
+        }
+
+        td{
+            padding:14px;
+            border-bottom:1px solid #e5e7eb;
+        }
+
+        .tag{
+            padding:8px 14px;
+            border-radius:12px;
+            font-size:14px;
+            font-weight:bold;
+        }
+
+        .invoice{
+            background:#dbeafe;
+            color:#1d4ed8;
+        }
+
+        .date{
+            background:#dcfce7;
+            color:#15803d;
+        }
+
+        .total{
+            background:#ffedd5;
+            color:#c2410c;
+        }
+
+        .other{
+            background:#f3f4f6;
+            color:#374151;
+        }
+
+        @media(max-width:1300px){
+
+            .content{
+                grid-template-columns:1fr;
+            }
+
+        }
+
+        @media(max-width:900px){
+
+            body{
+                flex-direction:column;
+            }
+
+            .sidebar{
+                position:relative;
+                width:100%;
+                height:auto;
+            }
+
+            .main{
+                margin-left:0;
+                width:100%;
+            }
+
+            .summary{
+                grid-template-columns:1fr;
+            }
+
+        }
+
+    </style>
+
+</head>
+<body>
+
+    <div class="sidebar">
+
+        <div class="logo">
+            Scan2Struct
+        </div>
+
+        <div class="subtitle">
+            AI Invoice Intelligence
+        </div>
+
+        <div class="menu-item">
+            📄 Upload Invoice
+        </div>
+
+        <div class="menu-item active">
+            🤖 AI Results
+        </div>
+
+        <div class="menu-item">
+            📊 Analytics
+        </div>
+
+        <div class="menu-item">
+            🗂 History
+        </div>
+
+    </div>
+
+
+    <div class="main">
+
+        <div class="topbar">
+
+            <div>
+
+                <h1>AI Invoice Results</h1>
+
+                <p>
+                    Intelligent Visual Named Entity Recognition
+                </p>
+
+            </div>
+
+            <a href="/" class="upload-btn">
+                Upload Another
+            </a>
+
+        </div>
+
+
+        <div class="summary">
+
+            <div class="card">
+
+                <p>Invoice Number</p>
+
+                <h1 class="blue">
+                    {{ invoice_number }}
+                </h1>
+
+            </div>
+
+            <div class="card">
+
+                <p>Invoice Date</p>
+
+                <h1 class="green">
+                    {{ invoice_date }}
+                </h1>
+
+            </div>
+
+            <div class="card">
+
+                <p>Total Amount</p>
+
+                <h1 class="orange">
+                    {{ total_amount }}
+                </h1>
+
+            </div>
+
+        </div>
+
+
+        <div class="content">
+
+            <div class="panel">
+
+                <h2>Invoice Preview</h2>
+
+                <img
+                    src="{{ url_for('static', filename='uploads/' + image_file) }}"
+                    class="preview-img"
+                >
+
+            </div>
+
+
+            <div class="panel">
+
+                <h2>OCR Extracted Text</h2>
+
+                <div class="ocr-box">
+
+                    {{ extracted_text }}
+
+                </div>
+
+            </div>
+
+
+            <div class="panel">
+
+                <h2>AI Entity Predictions</h2>
+
+                <div class="table-box">
+
+                    <table>
+
+                        <tr>
+                            <th>Word</th>
+                            <th>Prediction</th>
+                        </tr>
+
+                        {% for word, label in predictions %}
+
+                        <tr>
+
+                            <td>{{ word }}</td>
+
+                            <td>
+
+                                {% if 'INVOICE' in label %}
+
+                                    <span class="tag invoice">
+                                        {{ label }}
+                                    </span>
+
+                                {% elif 'DATE' in label %}
+
+                                    <span class="tag date">
+                                        {{ label }}
+                                    </span>
+
+                                {% elif 'TOTAL' in label %}
+
+                                    <span class="tag total">
+                                        {{ label }}
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="tag other">
+                                        {{ label }}
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+</html>
