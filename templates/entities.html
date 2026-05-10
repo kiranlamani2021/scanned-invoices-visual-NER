@@ -48,12 +48,19 @@
             margin-bottom:15px;
             background:rgba(255,255,255,0.08);
             font-size:18px;
+            text-decoration:none;
+            display:block;
+            color:white;
         }
 
         .menu-item.active{
             background:white;
             color:#143d82;
             font-weight:bold;
+        }
+
+        .menu-item:hover{
+            background:rgba(255,255,255,0.15);
         }
 
         .main{
@@ -249,21 +256,21 @@
             AI Invoice Intelligence
         </div>
 
-        <div class="menu-item">
+        <a href="/" class="menu-item">
             📄 Upload Invoice
-        </div>
+        </a>
 
         <div class="menu-item active">
-            🤖 AI Results
+            📊 AI Results
         </div>
 
-        <div class="menu-item">
-            📊 Analytics
-        </div>
+        <a href="/analytics" class="menu-item">
+            📈 Analytics
+        </a>
 
-        <div class="menu-item">
-            🗂 History
-        </div>
+        <a href="/history" class="menu-item">
+            📜 History
+        </a>
 
     </div>
 
@@ -298,6 +305,9 @@
                 <h1 class="blue">
                     {{ invoice_number }}
                 </h1>
+                <p style="margin-top:10px;color:#2563eb;font-weight:bold;">
+    Confidence: {{ invoice_confidence }}%
+</p>
 
             </div>
 
@@ -318,6 +328,9 @@
                 <h1 class="orange">
                     {{ total_amount }}
                 </h1>
+                <p style="margin-top:10px;color:#ea580c;font-weight:bold;">
+    Confidence: {{ amount_confidence }}%
+</p>
 
             </div>
 

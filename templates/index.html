@@ -49,12 +49,19 @@
             background:rgba(255,255,255,0.08);
             cursor:pointer;
             font-size:18px;
+            text-decoration:none;
+            display:block;
+            color:white;
         }
 
         .menu-item.active{
             background:white;
             color:#143d82;
             font-weight:bold;
+        }
+
+        .menu-item:hover{
+            background:rgba(255,255,255,0.15);
         }
 
         .main{
@@ -140,6 +147,9 @@
             border-radius:28px;
             padding:70px;
             text-align:center;
+            display:flex;
+            flex-direction:column;
+            align-items:center;
         }
 
         .upload-icon{
@@ -172,8 +182,8 @@
         }
 
         .scan-box{
-            margin-top:35px;
-            display:inline-flex;
+    margin:35px auto 0 auto;
+    display:flex;
             align-items:center;
             gap:16px;
             background:#f8fafc;
@@ -247,24 +257,24 @@
         </div>
 
         <div class="subtitle">
-            Visual NER Dashboard
+            AI Invoice Intelligence
         </div>
 
         <div class="menu-item active">
             📄 Upload Invoice
         </div>
 
-        <div class="menu-item">
-            🤖 AI Results
-        </div>
+        <a href="#" class="menu-item">
+            📊 AI Results
+        </a>
 
-        <div class="menu-item">
-            📊 Analytics
-        </div>
+        <a href="/analytics" class="menu-item">
+            📈 Analytics
+        </a>
 
-        <div class="menu-item">
-            🗂 History
-        </div>
+        <a href="/history" class="menu-item">
+            📜 History
+        </a>
 
     </div>
 

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>History - Scan2Struct</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:Arial;
+        }
+
+        body{
+            background:#f4f7fb;
+            display:flex;
+        }
+
+        .sidebar{
+            width:260px;
+            height:100vh;
+            background:#143d82;
+            color:white;
+            padding:30px 20px;
+            position:fixed;
+            left:0;
+            top:0;
+        }
+
+        .logo{
+            font-size:32px;
+            font-weight:bold;
+            margin-bottom:10px;
+        }
+
+        .subtitle{
+            color:#cbd5e1;
+            margin-bottom:50px;
+        }
+
+        .menu-item{
+            padding:18px 20px;
+            border-radius:14px;
+            margin-bottom:15px;
+            background:rgba(255,255,255,0.08);
+            cursor:pointer;
+            font-size:18px;
+            text-decoration:none;
+            display:block;
+            color:white;
+        }
+
+        .menu-item.active{
+            background:white;
+            color:#143d82;
+            font-weight:bold;
+        }
+
+        .menu-item:hover{
+            background:rgba(255,255,255,0.15);
+        }
+
+        .main{
+            margin-left:260px;
+            width:calc(100% - 260px);
+            padding:35px;
+        }
+
+        .topbar{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            margin-bottom:35px;
+        }
+
+        .topbar h1{
+            font-size:42px;
+            color:#111827;
+        }
+
+        .topbar p{
+            color:#6b7280;
+            margin-top:6px;
+        }
+
+        .upload-btn{
+            background:#143d82;
+            color:white;
+            text-decoration:none;
+            padding:15px 24px;
+            border-radius:14px;
+            font-weight:bold;
+        }
+
+        .table-container{
+            background:white;
+            border-radius:16px;
+            box-shadow:0px 4px 18px rgba(0,0,0,0.06);
+            overflow:hidden;
+        }
+
+        table{
+            width:100%;
+            border-collapse:collapse;
+        }
+
+        table thead{
+            background:#f3f4f6;
+            border-bottom:2px solid #e5e7eb;
+        }
+
+        table th{
+            padding:18px;
+            text-align:left;
+            font-weight:bold;
+            color:#111827;
+        }
+
+        table td{
+            padding:18px;
+            border-bottom:1px solid #e5e7eb;
+            color:#6b7280;
+        }
+
+        table tbody tr:hover{
+            background:#f9fafb;
+        }
+
+        .empty-state{
+            padding:60px;
+            text-align:center;
+            color:#6b7280;
+        }
+
+        .badge{
+            display:inline-block;
+            padding:6px 12px;
+            border-radius:20px;
+            font-size:14px;
+            font-weight:bold;
+        }
+
+        .badge-success{
+            background:#dcfce7;
+            color:#166534;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo">Scan2Struct</div>
+        <div class="subtitle">AI Invoice Intelligence</div>
+        <a href="/" class="menu-item">📄 Upload Invoice</a>
+        <a href="#" class="menu-item">📊 AI Results</a>
+        <a href="/analytics" class="menu-item">📈 Analytics</a>
+        <a href="/history" class="menu-item active">📜 History</a>
+    </div>
+
+    <div class="main">
+        <div class="topbar">
+            <div>
+                <h1>History</h1>
+                <p>Previous Invoice Processing Records</p>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Invoice Number</th>
+                        <th>Date</th>
+                        <th>Total Amount</th>
+                        <th>Status</th>
+                        <th>Processing Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if history %}
+                        {% for item in history.Predictions %}
+                        <tr>
+                            <td>{{ history.Invoice_Number }}</td>
+                            <td>{{ history.Invoice_Date }}</td>
+                            <td>${{ history.Total_Amount }}</td>
+                            <td><span class="badge badge-success">Completed</span></td>
+                            <td>2.3s</td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                    <tr>
+                        <td colspan="5" class="empty-state">
+                            No invoices processed yet. Start by uploading an invoice.
+                        </td>
+                    </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
