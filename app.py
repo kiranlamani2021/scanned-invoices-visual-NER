@@ -57,9 +57,18 @@ ner_status = "loading"
 ner_model_name = os.environ.get("INVOICE_NER_MODEL", "dslim/bert-base-NER")
 
 
+
 def load_ner_model():
     global ner_pipeline, ner_status
+
+    # Skip the memory-intensive NER model when disabled on Render.
+    if os.environ.get("DISABLE_NER", "").lower() in {"1", "true", "yes"}:
+        ner_status = "unavailable"
+        logger.info("NER disabled; using rule-based invoice extraction.")
+        return
+
     try:
+
         from transformers import pipeline
 
         loaded_pipeline = pipeline(
