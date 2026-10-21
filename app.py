@@ -632,10 +632,8 @@ def process_invoice(filepath, image_output_path):
     original_candidate = _resize_for_ocr(gray)
     processed_candidate = preprocess_image(image)
     candidates = (
-        ("grayscale, page segmentation 6", original_candidate, "--oem 3 --psm 6"),
-        ("adaptive threshold, page segmentation 6", processed_candidate, "--oem 3 --psm 6"),
-        ("grayscale, page segmentation 11", original_candidate, "--oem 3 --psm 11"),
-    )
+    ("grayscale, page segmentation 6", original_candidate, "--oem 3 --psm 6"),
+)
     best_candidate = None
     try:
         for description, candidate_image, config in candidates:
