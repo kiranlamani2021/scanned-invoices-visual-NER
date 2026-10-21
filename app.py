@@ -32,7 +32,7 @@ UPLOAD_FOLDER = BASE_DIR / "static" / "uploads"
 RESULTS_FOLDER = BASE_DIR / "results"
 DATABASE_PATH = RESULTS_FOLDER / "invoices.sqlite3"
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "tif", "tiff", "bmp", "pdf"}
-MAX_IMAGE_PIXELS = 25_000_000
+MAX_IMAGE_PIXELS = 8_000_000
 EXTRACTION_VERSION = 8
 
 UPLOAD_FOLDER.mkdir(parents=True, exist_ok=True)
@@ -630,7 +630,6 @@ def process_invoice(filepath, image_output_path):
     if np.std(gray) < 12:
         raise ValueError("The uploaded image appears blank or unreadable.")
     original_candidate = _resize_for_ocr(gray)
-    processed_candidate = preprocess_image(image)
     candidates = (
     ("grayscale, page segmentation 6", original_candidate, "--oem 3 --psm 6"),
 )
