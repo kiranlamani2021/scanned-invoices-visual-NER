@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#111827">
+  <title>{% block title %}{{ page_title|default("InvoiceAI") }} · InvoiceAI{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}">
+  {% block head %}{% endblock %}
+</head>
+<body>
+  <aside class="sidebar">
+    <a class="brand" href="{{ url_for('home') }}" aria-label="InvoiceAI dashboard">
+      <span class="brand-mark" aria-hidden="true">I</span>
+      <span>Invoice<span class="brand-light">AI</span><small>DOCUMENT INTELLIGENCE</small></span>
+    </a>
+    <div class="nav-label">WORKSPACE</div>
+    <nav class="side-nav" aria-label="Main navigation">
+      <a class="{% if request.endpoint == 'home' %}active{% endif %}" href="{{ url_for('home') }}"><span aria-hidden="true">◫</span> Dashboard</a>
+      <a href="{{ url_for('home') }}#upload"><span aria-hidden="true">＋</span> Process invoice</a>
+      <a class="{% if request.endpoint in ['history', 'invoice_detail'] %}active{% endif %}" href="{{ url_for('history') }}"><span aria-hidden="true">▤</span> Invoice history</a>
+      <a href="{{ url_for('history') }}#extracted-data"><span aria-hidden="true">⌗</span> Extracted data</a>
+      <a class="{% if request.endpoint == 'analytics' %}active{% endif %}" href="{{ url_for('analytics') }}"><span aria-hidden="true">↗</span> Reports &amp; exports</a>
+      <a class="{% if request.endpoint == 'about' %}active{% endif %}" href="{{ url_for('about') }}"><span aria-hidden="true">i</span> About</a>
+    </nav>
+    <div class="sidebar-footer">
+      <span class="status-dot"></span>
+      <span>OCR workspace</span>
+      <small>Tesseract · Visual NER</small>
+    </div>
+  </aside>
+  <main class="main-shell">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">INVOICE INTELLIGENCE</p>
+        <h1>{% block page_heading %}{{ page_title|default("Dashboard") }}{% endblock %}</h1>
+      </div>
+      <a class="button button-primary top-action" href="{{ url_for('home') }}#upload">＋ <span>Process invoice</span></a>
+    </header>
+    <div class="content">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <div class="flash-stack" role="status" aria-live="polite">
+            {% for category, message in messages %}
+              <div class="notice notice-{{ category }}">{{ message }}</div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+      {% block content %}{% endblock %}
+      <footer class="footer">InvoiceAI <span>·</span> OCR-powered document extraction</footer>
+    </div>
+  </main>
+  <script src="{{ url_for('static', filename='app.js') }}" defer></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

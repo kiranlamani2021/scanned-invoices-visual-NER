@@ -1,173 +1,99 @@
-# Scan2Struct - AI Invoice Intelligence
+# InvoiceAI — AI Invoice Intelligence
 
-An advanced web-based invoice processing system using Visual Named Entity Recognition (NER) to automatically extract key information from scanned invoices.
+InvoiceAI is a Flask application for extracting invoice fields from scanned images and PDFs. It combines Tesseract OCR and OpenCV preprocessing with transparent rule-based field extraction and an optional Hugging Face transformer NER model.
 
 ## Features
 
-- **📄 Invoice Upload**: Support for both image and PDF formats
-- **🎯 Smart Extraction**: Automatically extracts Invoice Number, Date, and Total Amount
-- **🤖 AI Entity Recognition**: Uses transformer-based NER models to identify and classify all entities
-- **📊 OCR Processing**: Advanced OCR with bounding box visualization
-- **💾 Data Export**: Export results to JSON and Excel formats
-- **📈 Analytics**: Track processing metrics and performance
-- **📜 History**: View all processed invoices
+- Upload PDF, PNG, JPG/JPEG, TIFF, and BMP invoices (up to 20 MB).
+- Extract OCR text and rule-based invoice number, date, supplier, subtotal, tax, and total fields.
+- Show highlighted OCR regions, NER entities, and missing-field warnings.
+- Keep a persistent local invoice history in SQLite.
+- Search and filter history, view invoice details, and export individual JSON or Excel results and a combined Excel report.
+- Display dashboard and report counts from saved records rather than sample metrics.
 
-## Project Structure
+## Requirements
 
-```
-scanned-invoices-visual-ner/
-├── app.py                 # Flask application entry point
-├── requirements.txt       # Python dependencies
-├── templates/             # HTML templates
-│   ├── index.html        # Upload page
-│   ├── entities.html     # Results page
-│   ├── analytics.html    # Analytics dashboard
-│   └── history.html      # Processing history
-├── static/               # Static files
-│   └── uploads/          # Temporary uploaded files
-├── results/              # Output directory
-│   ├── output.json       # JSON export
-│   └── output.xlsx       # Excel export
-├── model/                # ML model utilities
-│   ├── draw_boxes.py
-│   ├── labels.py
-│   ├── layoutlm_test.py
-│   ├── ocr_boxes.py
-│   └── predict_entities.py
-└── dataset/              # Training data directory
-```
+- Python 3.9 or newer.
+- Tesseract OCR.
+- Poppler utilities for PDF conversion.
+- Python dependencies listed in `requirements.txt`.
 
-## Installation
+### Install system packages
 
-### Prerequisites
-- Python 3.8+
-- Tesseract OCR engine
-- poppler (for PDF processing)
+GitHub Codespaces / Debian / Ubuntu:
 
-### Setup
-
-1. Clone or download the project:
 ```bash
-cd scanned-invoices-visual-ner
+sudo apt-get update
+sudo apt-get install -y tesseract-ocr poppler-utils
 ```
 
-2. Create a virtual environment:
+macOS with Homebrew:
+
 ```bash
-python -m venv venv_new
+brew install tesseract poppler
 ```
 
-3. Activate the virtual environment:
+Windows: install Tesseract OCR and Poppler, then set `TESSERACT_CMD` to the Tesseract executable path and add Poppler's `bin` directory to `PATH`.
 
-**Windows (PowerShell):**
-```powershell
-.\venv_new\Scripts\Activate.ps1
-```
+## Install and run
 
-**Windows (CMD):**
-```cmd
-venv_new\Scripts\activate.bat
-```
+From the repository root:
 
-**Linux/Mac:**
 ```bash
-source venv_new/bin/activate
-```
-
-4. Install dependencies:
-```bash
+python -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
 pip install -r requirements.txt
-```
-
-5. Configure OCR paths in `app.py`:
-```python
-pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
-```
-
-## Usage
-
-1. Start the Flask application:
-```bash
 python app.py
 ```
 
-2. Open your browser and navigate to:
+Open `http://127.0.0.1:5000`. In Codespaces, forward port `5000` when prompted. To use another port, set `PORT` before starting the app:
+
+```bash
+PORT=8000 python app.py
 ```
-http://127.0.0.1:5000
+
+The NER model (`dslim/bert-base-NER` by default) loads once in the background during application startup so the web server can accept requests while model weights initialize. Transformers may download its model files on first launch; if it cannot load, OCR and rule-based extraction remain available and the results page reports the NER limitation. To select another Hugging Face NER model, set `INVOICE_NER_MODEL`.
+
+OCR preprocessing compares the original grayscale scan and an adaptive-threshold candidate using Tesseract page segmentation modes 6 and 11, then chooses the OCR result with the strongest confidence/word coverage. The highlighted preview is drawn over the original image, and raw recognized text is stored for review. To log full OCR text for a debugging session, set both `LOG_LEVEL=DEBUG` and `LOG_OCR_TEXT=true`; those logs contain sensitive invoice contents and should be handled accordingly.
+
+When the extraction rules change, saved invoice fields are recomputed at application startup from the OCR text already stored in SQLite. The original stored OCR text is not modified; an invoice must be re-uploaded only if improved OCR (rather than improved field mapping) is required.
+
+## Configuration
+
+| Variable | Default | Purpose |
+| --- | --- | --- |
+| `PORT` | `5000` | Flask listening port |
+| `HOST` | `0.0.0.0` | Listening interface |
+| `FLASK_DEBUG` | `false` | Enables Flask debug mode only when set to `true` |
+| `FLASK_SECRET_KEY` | Random per process | Set a private stable random value for deployed environments |
+| `TESSERACT_CMD` | Tesseract on `PATH` | Explicit Tesseract executable path |
+| `INVOICE_NER_MODEL` | `dslim/bert-base-NER` | Hugging Face token-classification model |
+| `LOG_LEVEL` | `INFO` | Server log level |
+
+For example, generate a session secret before deployment:
+
+```bash
+export FLASK_SECRET_KEY="$(python -c 'import secrets; print(secrets.token_hex(32))')"
 ```
 
-3. Use the interface to:
-   - **Upload Invoice**: Upload an image or PDF invoice
-   - **View Results**: See extracted data and entity predictions
-   - **Check Analytics**: View processing metrics
-   - **Browse History**: Review previous processed invoices
+Do not enable debug mode on a public deployment.
 
-## Key Technologies
+## Data and limitations
 
-- **Flask**: Web framework
-- **PyTorch & Hugging Face Transformers**: NER models
-- **OpenCV**: Image processing
-- **Tesseract OCR**: Optical character recognition
-- **Pandas**: Data manipulation
-- **pdf2image**: PDF handling
+Invoice metadata, extracted fields, OCR text, NER output, and warnings are stored in `results/invoices.sqlite3`. The uploaded source file is removed after processing; highlighted preview images are retained under `static/uploads/` for the history detail pages. Remove the corresponding database record and preview file when deleting a document's retained data.
 
-## API Routes
+Field extraction uses OCR text and label-aware regular expressions, not a specialized invoice understanding model. Unreadable or absent fields are displayed as missing and flagged for review; no confidence score is invented. NER output and its model score are kept separate from the invoice-field extraction. PDFs are limited to their first page. OCR quality depends on image quality and invoice layout.
+
+## Routes
 
 | Route | Method | Purpose |
-|-------|--------|---------|
-| `/` | GET | Home page - Invoice upload |
-| `/upload` | POST | Process uploaded invoice |
-| `/analytics` | GET | Analytics dashboard |
-| `/history` | GET | Processing history |
-
-## Output Files
-
-After processing, the following files are generated:
-
-- **output.json**: Invoice data and predictions in JSON format
-- **output.xlsx**: Invoice data in Excel format
-- **highlighted_invoice.png**: Invoice with detected text boxes highlighted
-
-## Confidence Scores
-
-The system provides confidence scores for:
-- Invoice Number extraction (85-99%)
-- Invoice Date extraction (85-97%)
-- Total Amount extraction (85-99%)
-
-## Known Limitations
-
-- PDF processing requires poppler installation
-- Large images may take longer to process
-- OCR accuracy depends on image quality
-- NER model performance varies with invoice format
-
-## Future Enhancements
-
-- [ ] Batch invoice processing
-- [ ] Custom model training
-- [ ] Multi-language support
-- [ ] Database integration
-- [ ] Real-time monitoring dashboard
-- [ ] Email integration
-
-## Troubleshooting
-
-### Missing Tesseract Error
-Install Tesseract OCR from: https://github.com/UB-Mannheim/tesseract/wiki
-
-### PDF Processing Error
-Install poppler: `https://poppler.freedesktop.org/`
-
-### Module Import Errors
-Reinstall dependencies:
-```bash
-pip install --upgrade -r requirements.txt
-```
-
-## License
-
-This project is provided as-is for invoice processing and automation.
-
-## Support
-
-For issues or questions, please refer to the documentation or check the console output for detailed error messages.
+| --- | --- | --- |
+| `/` | GET | Dashboard and invoice upload |
+| `/upload` | POST | Validate and process an invoice |
+| `/invoices/<id>` | GET | View saved fields, OCR text, NER, and preview |
+| `/history` | GET | Search and filter invoice history |
+| `/analytics` | GET | Saved processing metrics and reports |
+| `/about` | GET | Processing workflow and local-data notes |
+| `/export/<id>.json` | GET | Download one invoice result |
+| `/export.xlsx` | GET | Download one invoice (`?id=<id>`) or all saved results |

@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}About · InvoiceAI{% endblock %}
+{% block page_heading %}About InvoiceAI{% endblock %}
+{% block content %}
+<section class="welcome-row">
+  <div><p class="eyebrow">DOCUMENT INTELLIGENCE</p><h2>How invoice processing works</h2><p class="muted">InvoiceAI turns scanned documents into reviewable structured data without hiding how each result was produced.</p></div>
+</section>
+<div class="about-grid">
+  <section class="card about-card"><span class="about-number">01</span><h3>Prepare &amp; read</h3><p>PDFs are converted from their first page. OpenCV normalizes the document image before Tesseract reads the visible text and word regions.</p></section>
+  <section class="card about-card"><span class="about-number">02</span><h3>Extract fields</h3><p>Label-aware rules identify invoice number, invoice date, supplier, subtotal, tax, and total when those values are present in the OCR text.</p></section>
+  <section class="card about-card"><span class="about-number">03</span><h3>Recognize entities</h3><p>A Hugging Face token-classification model adds general named entities when available. Model output is shown separately from rule-based invoice fields.</p></section>
+  <section class="card about-card"><span class="about-number">04</span><h3>Review &amp; export</h3><p>Missing values and processing limitations are flagged. Saved results can be searched in history and downloaded as JSON or Excel.</p></section>
+</div>
+<section class="card about-details">
+  <div class="section-heading"><div><p class="eyebrow">LOCAL WORKSPACE</p><h2>Data and requirements</h2></div></div>
+  <p>Invoice history, extracted OCR text, fields, entities, and warnings are stored in the local SQLite database. Original uploads are removed after processing; highlighted previews remain available for invoice details.</p>
+  <p class="muted">Image and PDF uploads up to 20 MB are accepted. PDF support requires Poppler; OCR requires Tesseract. See the <a class="text-link" href="https://github.com/kiranlamani2021/scanned-invoices-visual-NER">project README</a> for installation and configuration.</p>
+</section>
+{% endblock %}

@@ -1,431 +1,51 @@
-<!DOCTYPE html>
-<html>
-<head>
-
-    <title>AI Invoice Results</title>
-
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <style>
-
-        *{
-            margin:0;
-            padding:0;
-            box-sizing:border-box;
-            font-family:Arial;
-        }
-
-        body{
-            background:#f4f7fb;
-            display:flex;
-        }
-
-        .sidebar{
-            width:260px;
-            height:100vh;
-            background:#143d82;
-            color:white;
-            padding:30px 20px;
-            position:fixed;
-            left:0;
-            top:0;
-        }
-
-        .logo{
-            font-size:32px;
-            font-weight:bold;
-            margin-bottom:10px;
-        }
-
-        .subtitle{
-            color:#cbd5e1;
-            margin-bottom:50px;
-        }
-
-        .menu-item{
-            padding:18px 20px;
-            border-radius:14px;
-            margin-bottom:15px;
-            background:rgba(255,255,255,0.08);
-            font-size:18px;
-            text-decoration:none;
-            display:block;
-            color:white;
-        }
-
-        .menu-item.active{
-            background:white;
-            color:#143d82;
-            font-weight:bold;
-        }
-
-        .menu-item:hover{
-            background:rgba(255,255,255,0.15);
-        }
-
-        .main{
-            margin-left:260px;
-            width:calc(100% - 260px);
-            padding:35px;
-        }
-
-        .topbar{
-            display:flex;
-            justify-content:space-between;
-            align-items:center;
-            margin-bottom:35px;
-        }
-
-        .topbar h1{
-            font-size:42px;
-            color:#111827;
-        }
-
-        .topbar p{
-            color:#6b7280;
-            margin-top:6px;
-        }
-
-        .upload-btn{
-            background:#143d82;
-            color:white;
-            text-decoration:none;
-            padding:15px 24px;
-            border-radius:14px;
-            font-weight:bold;
-        }
-
-        .summary{
-            display:grid;
-            grid-template-columns:repeat(3,1fr);
-            gap:25px;
-            margin-bottom:35px;
-        }
-
-        .card{
-            background:white;
-            padding:30px;
-            border-radius:24px;
-            box-shadow:0px 4px 18px rgba(0,0,0,0.06);
-        }
-
-        .card p{
-            color:#6b7280;
-            margin-bottom:12px;
-        }
-
-        .card h1{
-            font-size:40px;
-        }
-
-        .blue{color:#2563eb;}
-        .green{color:#16a34a;}
-        .orange{color:#ea580c;}
-
-        .content{
-            display:grid;
-            grid-template-columns:1fr 1fr 1.2fr;
-            gap:25px;
-        }
-
-        .panel{
-            background:white;
-            border-radius:24px;
-            padding:28px;
-            box-shadow:0px 4px 18px rgba(0,0,0,0.06);
-        }
-
-        .panel h2{
-            margin-bottom:25px;
-            color:#111827;
-        }
-
-        .preview-img{
-            width:100%;
-            border-radius:18px;
-            border:1px solid #e5e7eb;
-        }
-
-        .ocr-box{
-            background:#f8fafc;
-            border-radius:16px;
-            padding:20px;
-            height:700px;
-            overflow:auto;
-            line-height:1.7;
-            border:1px solid #e5e7eb;
-            white-space:pre-wrap;
-        }
-
-        .table-box{
-            max-height:700px;
-            overflow:auto;
-            border-radius:16px;
-            border:1px solid #e5e7eb;
-        }
-
-        table{
-            width:100%;
-            border-collapse:collapse;
-        }
-
-        th{
-            background:#143d82;
-            color:white;
-            padding:16px;
-            text-align:left;
-            position:sticky;
-            top:0;
-        }
-
-        td{
-            padding:14px;
-            border-bottom:1px solid #e5e7eb;
-        }
-
-        .tag{
-            padding:8px 14px;
-            border-radius:12px;
-            font-size:14px;
-            font-weight:bold;
-        }
-
-        .invoice{
-            background:#dbeafe;
-            color:#1d4ed8;
-        }
-
-        .date{
-            background:#dcfce7;
-            color:#15803d;
-        }
-
-        .total{
-            background:#ffedd5;
-            color:#c2410c;
-        }
-
-        .other{
-            background:#f3f4f6;
-            color:#374151;
-        }
-
-        @media(max-width:1300px){
-
-            .content{
-                grid-template-columns:1fr;
-            }
-
-        }
-
-        @media(max-width:900px){
-
-            body{
-                flex-direction:column;
-            }
-
-            .sidebar{
-                position:relative;
-                width:100%;
-                height:auto;
-            }
-
-            .main{
-                margin-left:0;
-                width:100%;
-            }
-
-            .summary{
-                grid-template-columns:1fr;
-            }
-
-        }
-
-    </style>
-
-</head>
-<body>
-
-    <div class="sidebar">
-
-        <div class="logo">
-            Scan2Struct
-        </div>
-
-        <div class="subtitle">
-            AI Invoice Intelligence
-        </div>
-
-        <a href="/" class="menu-item">
-            📄 Upload Invoice
-        </a>
-
-        <div class="menu-item active">
-            📊 AI Results
-        </div>
-
-        <a href="/analytics" class="menu-item">
-            📈 Analytics
-        </a>
-
-        <a href="/history" class="menu-item">
-            📜 History
-        </a>
-
-    </div>
-
-
-    <div class="main">
-
-        <div class="topbar">
-
-            <div>
-
-                <h1>AI Invoice Results</h1>
-
-                <p>
-                    Intelligent Visual Named Entity Recognition
-                </p>
-
-            </div>
-
-            <a href="/" class="upload-btn">
-                Upload Another
-            </a>
-
-        </div>
-
-
-        <div class="summary">
-
-            <div class="card">
-
-                <p>Invoice Number</p>
-
-                <h1 class="blue">
-                    {{ invoice_number }}
-                </h1>
-                <p style="margin-top:10px;color:#2563eb;font-weight:bold;">
-    Confidence: {{ invoice_confidence }}%
-</p>
-
-            </div>
-
-            <div class="card">
-
-                <p>Invoice Date</p>
-
-                <h1 class="green">
-                    {{ invoice_date }}
-                </h1>
-
-            </div>
-
-            <div class="card">
-
-                <p>Total Amount</p>
-
-                <h1 class="orange">
-                    {{ total_amount }}
-                </h1>
-                <p style="margin-top:10px;color:#ea580c;font-weight:bold;">
-    Confidence: {{ amount_confidence }}%
-</p>
-
-            </div>
-
-        </div>
-
-
-        <div class="content">
-
-            <div class="panel">
-
-                <h2>Invoice Preview</h2>
-
-                <img
-                    src="{{ url_for('static', filename='uploads/' + image_file) }}"
-                    class="preview-img"
-                >
-
-            </div>
-
-
-            <div class="panel">
-
-                <h2>OCR Extracted Text</h2>
-
-                <div class="ocr-box">
-
-                    {{ extracted_text }}
-
-                </div>
-
-            </div>
-
-
-            <div class="panel">
-
-                <h2>AI Entity Predictions</h2>
-
-                <div class="table-box">
-
-                    <table>
-
-                        <tr>
-                            <th>Word</th>
-                            <th>Prediction</th>
-                        </tr>
-
-                        {% for word, label in predictions %}
-
-                        <tr>
-
-                            <td>{{ word }}</td>
-
-                            <td>
-
-                                {% if 'INVOICE' in label %}
-
-                                    <span class="tag invoice">
-                                        {{ label }}
-                                    </span>
-
-                                {% elif 'DATE' in label %}
-
-                                    <span class="tag date">
-                                        {{ label }}
-                                    </span>
-
-                                {% elif 'TOTAL' in label %}
-
-                                    <span class="tag total">
-                                        {{ label }}
-                                    </span>
-
-                                {% else %}
-
-                                    <span class="tag other">
-                                        {{ label }}
-                                    </span>
-
-                                {% endif %}
-
-                            </td>
-
-                        </tr>
-
-                        {% endfor %}
-
-                    </table>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</body>
-</html>
+{% extends "base.html" %}
+{% block title %}Invoice {{ invoice.id }} · InvoiceAI{% endblock %}
+{% block page_heading %}Invoice details{% endblock %}
+{% block content %}
+<div class="detail-title-row">
+  <div><p class="eyebrow">PROCESSED DOCUMENT</p><h2>{{ invoice.filename }}</h2><p class="muted">Processed {{ invoice.created_at|replace('T', ' ') }} UTC</p></div>
+  <div class="action-row">
+    <span class="badge badge-{{ invoice.status }}">{{ 'Processed' if invoice.status == 'success' else 'Needs review' }}</span>
+    <a class="button button-secondary" href="{{ url_for('export_json', invoice_id=invoice.id) }}">Download JSON</a>
+    <a class="button button-secondary" href="{{ url_for('export_excel', id=invoice.id) }}">Download Excel</a>
+    <a class="button button-primary" href="{{ url_for('home') }}#upload">Process another</a>
+  </div>
+</div>
+
+{% if invoice.warnings %}
+<section class="notice notice-warning" aria-label="Data quality warnings"><strong>Review recommended</strong><ul>{% for warning in invoice.warnings %}<li>{{ warning }}</li>{% endfor %}</ul></section>
+{% endif %}
+
+<div class="section-heading"><div><p class="eyebrow">RULE-BASED EXTRACTION</p><h2>Invoice fields</h2></div><span class="subtle-pill">OCR + label evidence</span></div>
+<section class="field-grid" aria-label="Extracted invoice fields">
+  {% for label, value in invoice.fields.items() %}
+  {% set quality = invoice.field_quality.get(label, {}) %}
+  <article class="field-card">
+    <span class="field-label">{{ label }}</span>
+    <strong>{{ value or 'Not found' }}</strong>
+    <span class="field-quality field-quality-{{ quality.get('status', 'not_found') }}">
+      {{ 'Label matched' if quality.get('status') == 'matched' else 'Inferred — verify' if quality.get('status') == 'inferred' else 'Needs review' }}
+    </span>
+    {% if quality.get('reason') %}<span class="field-reason">{{ quality.get('reason') }}</span>{% endif %}
+  </article>
+  {% endfor %}
+</section>
+
+<div class="result-grid">
+  <section class="card preview-card">
+    <div class="section-heading"><div><p class="eyebrow">VISUAL OCR</p><h2>Highlighted invoice</h2></div><a class="text-link" href="{{ url_for('static', filename='uploads/' + invoice.image_file) }}" target="_blank" rel="noopener">Open image ↗</a></div>
+    <a href="{{ url_for('static', filename='uploads/' + invoice.image_file) }}" target="_blank" rel="noopener"><img class="invoice-preview" src="{{ url_for('static', filename='uploads/' + invoice.image_file) }}" alt="Invoice with OCR word regions highlighted"></a>
+    <p class="form-hint">Colored outlines mark regions recognized by OCR.</p>
+  </section>
+  <section class="card">
+    <div class="section-heading"><div><p class="eyebrow">TRANSFORMER NER</p><h2>Recognized entities</h2></div><span class="subtle-pill">{{ invoice.entities|length }} entities</span></div>
+    {% if invoice.entities %}
+    <div class="table-scroll compact-table"><table><thead><tr><th>Entity</th><th>Label</th><th>Model score</th></tr></thead><tbody>{% for entity in invoice.entities %}<tr><td class="primary-cell">{{ entity.word }}</td><td><span class="subtle-pill">{{ entity.label }}</span></td><td>{{ '%.1f'|format(entity.score * 100) ~ '%' if entity.score is not none else 'Not provided' }}</td></tr>{% endfor %}</tbody></table></div>
+    {% else %}<div class="empty-inline">No NER entities are available. Rule-based fields and OCR results are shown separately.</div>{% endif %}
+  </section>
+</div>
+<section class="card">
+  <div class="section-heading"><div><p class="eyebrow">OCR OUTPUT</p><h2>Extracted text</h2></div></div>
+  <pre class="ocr-text">{{ invoice.extracted_text }}</pre>
+</section>
+{% endblock %}

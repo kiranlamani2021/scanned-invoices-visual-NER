@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}{{ page_title }} · InvoiceAI{% endblock %}
+{% block page_heading %}{{ page_title }}{% endblock %}
+{% block content %}
+<section class="card error-card">
+  <span class="empty-icon" aria-hidden="true">!</span>
+  <h2>{{ message }}</h2>
+  <p class="muted">Return to the workspace to continue processing invoices.</p>
+  <a class="button button-primary" href="{{ url_for('home') }}">Back to dashboard</a>
+</section>
+{% endblock %}
